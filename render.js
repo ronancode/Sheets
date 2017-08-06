@@ -1,12 +1,13 @@
+var render_scene = 1;
 var frame = 0;
 
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
-var width = 1000;var height = 1000;
+var width = 850;var canvas_height = 850;var height = 650;
 canvas.width = width;
-canvas.height = height;
+canvas.height = canvas_height;
 
-var capture_time = 60;
+var capture_time = 30;
 
 var capturer = new CCapture( {
 	framerate: 60,
@@ -67,7 +68,7 @@ num_lines = Math.floor(height/(line_separation));
 
 //Generate array
 var points = [];
-var initial_x = 0;
+var initial_x = 100;
 x = initial_x;
 for(var i=0; i < num_lines; i++) {
 	for (var j=0; j < pts_per_line; j++) {
@@ -90,7 +91,9 @@ gradient.addColorStop(0.15,"#fccfa8");
 gradient.addColorStop(0.5,"#e3eae3");
 gradient.addColorStop(1,"#6ba8c5");
 
-capturer.start();
+if (render_scene) {
+	capturer.start();
+}
 
 function render() {
 	// clear screen
@@ -101,9 +104,9 @@ function render() {
 	trail = getSin+0.1;
 	if (trail > 1) {trail = 1;}
 	r=0;g=0;b=0;
-    context.fillStyle = "rgba("+r+","+g+","+b+","+trail+")";
+    context.fillStyle = "rgba("+r+","+g+","+b+","+1+")";
     //context.fillStyle = gradient;
-    context.fillRect(0, 0, width, height);
+    context.fillRect(0, 0, width, canvas_height);
     //context.globalCompositeOperation = 'luminosity';
 	var x,y;
 	for(var i=0; i < num_lines; i++) {
@@ -132,7 +135,7 @@ function render() {
 	}
 	capturer.capture(canvas);
 	frame++;
-	if (frame > (60*capture_time)) {
+	if ((frame > (60*capture_time)) && (render_scene)) {
 		capturer.stop();
 		capturer.save(showVideoLink);
 	}
