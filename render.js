@@ -1,10 +1,21 @@
 var frame = 0;
 
-width = 1000;
-height = 1000;
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+var width = 1000;var height = 1000;
+canvas.width = width;
+canvas.height = height;
 
-canvas = d3.select('body').append('canvas').attr('width',width).attr('height',height);
-context = canvas.node().getContext('2d');
+var capture_time = 60;
+
+var capturer = new CCapture( {
+	framerate: 60,
+	verbose: true,
+	format: 'ffmpegserver',
+	// extension: ".mp4",
+	// codec: "mpeg4",
+	name: 'sheets'
+} );
 
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
@@ -35,7 +46,21 @@ function getRandomColor(color,id) {
 	return color;
 }
 
-var line_separation = 5;
+function showVideoLink(url, size) {
+	size = size ? (" [size: " + (size / 1024 / 1024).toFixed(1) + "meg]") : " [unknown size]";
+	var a = document.createElement("a");
+	a.href = url;
+	var filename = url;
+	var slashNdx = filename.lastIndexOf("/");
+	if (slashNdx >= 0) {
+	  filename = filename.substr(slashNdx + 1);
+	}
+	a.download = filename;
+	a.appendChild(document.createTextNode(url + size));
+	document.body.appendChild(a);
+}
+
+var line_separation = 3;
 var pts_per_line, num_lines;
 pts_per_line = width/2;
 num_lines = Math.floor(height/(line_separation));
@@ -64,6 +89,8 @@ gradient.addColorStop(0.05,"#f2a48d");
 gradient.addColorStop(0.15,"#fccfa8");
 gradient.addColorStop(0.5,"#e3eae3");
 gradient.addColorStop(1,"#6ba8c5");
+
+capturer.start();
 
 function render() {
 	// clear screen
@@ -103,6 +130,15 @@ function render() {
 		}
 		context.stroke();
 	}
+	capturer.capture(canvas);
+	frame++;
+	if (frame > (60*capture_time)) {
+		capturer.stop();
+		capturer.save(showVideoLink);
+	}
+	else {
+		requestAnimationFrame(render);
+	}
 }
 
-render();
+requestAnimationFrame(render);

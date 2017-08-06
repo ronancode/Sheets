@@ -16,14 +16,11 @@ body {
   width: 100%;
   margin: 0;
 }
-canvas {
-  position: absolute;
-  cursor: none;
-/*  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);*/
-}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-<script src="./sheets.js"></script>
+<canvas id="myCanvas"></canvas>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+<!-- <script src="./node_modules/ccapture.js/build/CCapture.all.min.js"></script> -->
+<script src="http://localhost:8080/ffmpegserver/ffmpegserver.js"></script>
+<script src="http://localhost:8080/ffmpegserver/CCapture.js"></script>
+<script src="./render.js"></script>
 </body>
