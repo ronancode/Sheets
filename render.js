@@ -1,10 +1,10 @@
-var render_scene = 1;
+var render_scene = 0;
 var frame = 0;
 
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
-var width = 850;var canvas_height = 850;var height = 650;
-canvas.width = width;
+var canvas_width = 1920;var width = 850;var canvas_height = 1080;var height = 650;
+canvas.width = canvas_width;
 canvas.height = canvas_height;
 
 var capture_time = 30;
@@ -61,14 +61,14 @@ function showVideoLink(url, size) {
 	document.body.appendChild(a);
 }
 
-var line_separation = 3;
+var line_separation = 2;
 var pts_per_line, num_lines;
 pts_per_line = width/2;
 num_lines = Math.floor(height/(line_separation));
 
 //Generate array
 var points = [];
-var initial_x = 100;
+var initial_x = ((canvas_height-height)/2);
 x = initial_x;
 for(var i=0; i < num_lines; i++) {
 	for (var j=0; j < pts_per_line; j++) {
@@ -84,7 +84,7 @@ g = (148-110)/2;
 b = (230-173)/2;
 
 // Generate gradient
-var gradient = context.createLinearGradient(0,height,0,0);
+var gradient = context.createLinearGradient(0,(((canvas_height-height)/2)+height),0,0);
 gradient.addColorStop(0,"#b87e7a");
 gradient.addColorStop(0.05,"#f2a48d");
 gradient.addColorStop(0.15,"#fccfa8");
@@ -106,7 +106,7 @@ function render() {
 	r=0;g=0;b=0;
     context.fillStyle = "rgba("+r+","+g+","+b+","+1+")";
     //context.fillStyle = gradient;
-    context.fillRect(0, 0, width, canvas_height);
+    context.fillRect(0, 0, canvas_width, canvas_height);
     //context.globalCompositeOperation = 'luminosity';
 	var x,y;
 	for(var i=0; i < num_lines; i++) {
@@ -117,7 +117,7 @@ function render() {
 			else {prevx = points[index-1];prevlinex=x;}
 			x = getRandomPoint(x,prevx,i,j,initial_x);
 			points[index] = x;
-			y = j * (width/pts_per_line);
+			y = (j * (width/pts_per_line))+((canvas_width-width)/2);
 			if (j == 0) {
 				context.beginPath();
 				r=255;g=255;b=255;
